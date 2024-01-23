@@ -10051,7 +10051,9 @@ static void generate_m(switch_core_session_t *session, char *buf, size_t buflen,
 			switch_rtp_crypto_key_type_t j = SUITES[smh->crypto_suite_order[i]].type;
 
 			if ((a_engine->crypto_type == j || a_engine->crypto_type == CRYPTO_INVALID) && !zstr(a_engine->ssec[j].local_crypto_key)) {
-				switch_snprintf(buf + strlen(buf), buflen - strlen(buf), "a=crypto:%s\r\n", a_engine->ssec[j].local_crypto_key);
+			  // -lk- TODO Make dynamic UNENCRYPTED_SRTCP based on parameter
+			  switch_snprintf(buf + strlen(buf), buflen - strlen(buf), "a=crypto:%s UNENCRYPTED_SRTCP\r\n", a_engine->ssec[j].local_crypto_key);
+				//switch_snprintf(buf + strlen(buf), buflen - strlen(buf), "a=crypto:%s\r\n", a_engine->ssec[j].local_crypto_key);
 			}
 		}
 		//switch_snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), "a=encryption:optional\r\n");
@@ -10779,7 +10781,8 @@ SWITCH_DECLARE(void) switch_core_media_gen_local_sdp(switch_core_session_t *sess
 		if (a_engine->crypto_type != CRYPTO_INVALID && !switch_channel_test_flag(session->channel, CF_DTLS) &&
 			!zstr(a_engine->ssec[a_engine->crypto_type].local_crypto_key) && switch_channel_test_flag(session->channel, CF_SECURE)) {
 
-			switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s\r\n", a_engine->ssec[a_engine->crypto_type].local_crypto_key);
+			// -lk- Hack for Avaya or SBC, try to send this UNENCRYPTED_SRTCP to fix problem with fast BYE (1 Sec. after INVITE)
+			switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s UNENCRYPTED_SRTCP\r\n", a_engine->ssec[a_engine->crypto_type].local_crypto_key);
 		//switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=encryption:optional\r\n");
 		}
 
