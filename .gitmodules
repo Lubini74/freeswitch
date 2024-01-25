@@ -1,0 +1,3 @@
+[submodule "src/mod/applications/mod_atip"]
+	path = src/mod/applications/mod_atip
+	url = git@git.atip.de:fs_core/freeswitch_mod_atip.git
