@@ -12,7 +12,7 @@
 *.dirstamp
 .\#*
 \#*
-*.user
+*.user*
 *.suo
 *.ncb
 *.pdb
@@ -264,6 +264,7 @@ src/mod/applications/mod_http_cache/test/test-suite.log
 src/mod/applications/mod_http_cache/test/test_aws
 src/mod/applications/mod_http_cache/test/test_aws.log
 src/mod/applications/mod_http_cache/test/test_aws.trs
+src/mod/languages/mod_python3/Makefile.release
 src/mod/formats/mod_sndfile/test/test_sndfile
 src/mod/formats/mod_sndfile/test/test_sndfile_conf
 src/mod/formats/mod_ssml/test/test_tts_format
@@ -281,3 +282,7 @@ images/test_text.png
 
 src/mod/codecs/mod_amrwb/test/test_amrwb
 src/mod/endpoints/mod_sofia/test/sipp-based-tests
+tests/unit/switch_core_asr
+tests/unit/switch_sip
+.qtc_clangd/
+QtCreatorFS.*
