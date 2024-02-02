@@ -254,7 +254,7 @@ static void eval_some_python(const char *funcname, char *args, switch_core_sessi
 			}
 
 			PyRun_SimpleString("import sys");
-			switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, "LOADING path %s", add_path);
+            switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_INFO, "LOADING path %s\n", add_path);
 
 			sprintf(buffer, "sys.path.append(\"%s\");", add_path );
 
