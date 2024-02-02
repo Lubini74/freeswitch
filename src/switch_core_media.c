@@ -1320,6 +1320,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_media_add_crypto(switch_core_session
 		/* Parsing the key material candidate within [begin, end). */
 
         if ((delimit = strchr(p, ':')) == NULL) {
+            // -lk- Avaya patch
             if(!strcasecmp(p, "UNENCRYPTED_SRTCP")){
                 switch_log_printf(SWITCH_CHANNEL_SESSION_LOG(session), SWITCH_LOG_INFO, "Detected UNENCRYPTED_SRTCP, switch to Avaya compatibility mode\n");
                 switch_channel_set_variable(session->channel, "accept_unencrypted_srtcp", "true");
@@ -10057,8 +10058,7 @@ static void generate_m(switch_core_session_t *session, char *buf, size_t buflen,
 			switch_rtp_crypto_key_type_t j = SUITES[smh->crypto_suite_order[i]].type;
 
 			if ((a_engine->crypto_type == j || a_engine->crypto_type == CRYPTO_INVALID) && !zstr(a_engine->ssec[j].local_crypto_key)) {
-			  // -lk- TODO Make dynamic UNENCRYPTED_SRTCP based on parameter
-              //switch_snprintf(buf + strlen(buf), buflen - strlen(buf), "a=crypto:%s UNENCRYPTED_SRTCP\r\n", a_engine->ssec[j].local_crypto_key);
+              // -lk- Avaya Patch
               const char *val = switch_channel_get_variable(session->channel, "accept_unencrypted_srtcp");
               switch_snprintf(buf + strlen(buf), buflen - strlen(buf), "a=crypto:%s%s\r\n", a_engine->ssec[j].local_crypto_key, (val? " UNENCRYPTED_SRTCP": ""));
 			}
@@ -11344,8 +11344,7 @@ SWITCH_DECLARE(void) switch_core_media_gen_local_sdp(switch_core_session_t *sess
 						switch_rtp_crypto_key_type_t j = SUITES[smh->crypto_suite_order[i]].type;
 
 						if ((a_engine->crypto_type == j || a_engine->crypto_type == CRYPTO_INVALID) && !zstr(a_engine->ssec[j].local_crypto_key)) {
-                            // -lk- TODO Make dynamic UNENCRYPTED_SRTCP based on parameter
-                            //switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s UNENCRYPTED_SRTCP\r\n", v_engine->ssec[j].local_crypto_key);
+                            // -lk- Avaya Patch
                             const char *val = switch_channel_get_variable(session->channel, "accept_unencrypted_srtcp");
                             switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s%s\r\n", v_engine->ssec[j].local_crypto_key, (val? " UNENCRYPTED_SRTCP": ""));
 						}
@@ -11688,8 +11687,7 @@ SWITCH_DECLARE(void) switch_core_media_gen_local_sdp(switch_core_session_t *sess
 						switch_rtp_crypto_key_type_t j = SUITES[smh->crypto_suite_order[i]].type;
 
 						if ((t_engine->crypto_type == j || t_engine->crypto_type == CRYPTO_INVALID) && !zstr(t_engine->ssec[j].local_crypto_key)) {
-                            // -lk- TODO Make dynamic UNENCRYPTED_SRTCP based on parameter
-                            //switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s UNENCRYPTED_SRTCP\r\n", t_engine->ssec[j].local_crypto_key);
+                            // -lk- Avaya Patch
                             const char *val = switch_channel_get_variable(session->channel, "accept_unencrypted_srtcp");
                             switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s%s\r\n", t_engine->ssec[j].local_crypto_key, (val? " UNENCRYPTED_SRTCP": ""));
 						}
