@@ -682,10 +682,10 @@ static switch_status_t sofia_on_soft_execute(switch_core_session_t *session)
 static switch_status_t sofia_acknowledge_call(switch_core_session_t *session)
 {
 	struct private_object *tech_pvt = switch_core_session_get_private(session);
-	const char *session_id_header = sofia_glue_session_id_header(session, tech_pvt->profile);
+    //const char *session_id_header = sofia_glue_session_id_header(session, tech_pvt->profile);
 
 	if (!tech_pvt->sent_100) {
-		nua_respond(tech_pvt->nh, SIP_100_TRYING, TAG_IF(!zstr(session_id_header), SIPTAG_HEADER_STR(session_id_header)), TAG_END());
+        //nua_respond(tech_pvt->nh, SIP_100_TRYING, TAG_IF(!zstr(session_id_header), SIPTAG_HEADER_STR(session_id_header)), TAG_END());
 		tech_pvt->sent_100 = 1;
 		return SWITCH_STATUS_SUCCESS;
 	}
