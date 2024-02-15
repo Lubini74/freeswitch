@@ -10792,7 +10792,8 @@ SWITCH_DECLARE(void) switch_core_media_gen_local_sdp(switch_core_session_t *sess
             if(val){
                 switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s UNENCRYPTED_SRTCP\r\n", a_engine->ssec[a_engine->crypto_type].local_crypto_key);
             } else {
-                switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=encryption:optional\r\n");
+                switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=crypto:%s\r\n", a_engine->ssec[a_engine->crypto_type].local_crypto_key);
+                //switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=encryption:optional\r\n");
             }
 		}
 
