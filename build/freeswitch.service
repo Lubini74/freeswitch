@@ -5,6 +5,7 @@ Requires=network.target local-fs.target
 After=syslog.target network.target
 
 [Service]
+RuntimeDirectory=freeswitch
 PIDFile=/run/freeswitch/freeswitch.pid
 Environment="DAEMON_OPTS=-nonat"
 Environment="USER=freeswitch"
