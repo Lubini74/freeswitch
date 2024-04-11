@@ -7,6 +7,7 @@ After=syslog.target network.target
 [Service]
 RuntimeDirectory=freeswitch
 PIDFile=/run/freeswitch/freeswitch.pid
+Environment="REQUESTS_CA_BUNDLE=/etc/pki/tls/certs/ca-bundle.crt"
 Environment="DAEMON_OPTS=-nonat"
 Environment="USER=freeswitch"
 Environment="GROUP=freeswitch"
