@@ -82,7 +82,7 @@ install: $(TARGET_LIB) apr-config.out build/apr_rules.out
 	$(APR_MKDIR) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(installbuilddir) \
 		     $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(includedir)
 	$(INSTALL_DATA) $(top_blddir)/include/fspr.h $(DESTDIR)$(includedir)
-	for f in $(top_srcdir)/include/apr_*.h; do \
+	for f in $(top_srcdir)/include/fspr_*.h; do \
 	    $(INSTALL_DATA) $${f} $(DESTDIR)$(includedir); \
 	done
 	$(LIBTOOL) --mode=install $(INSTALL) -m 755 $(TARGET_LIB) $(DESTDIR)$(libdir)
