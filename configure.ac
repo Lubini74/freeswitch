@@ -106,7 +106,7 @@ if test "${enable_fhs}" = "yes"; then
     default_storagedir="${localstatedir}/storage"
     default_recordingsdir="${localstatedir}/recordings"
     default_imagesdir="${localstatedir}/images"
-    eval confdir="${sysconfdir}/freeswitch"
+    eval confdir="$sysconfdir"
     eval default_certsdir="${confdir}/tls"
 else
     if test "$datadir" = "\${datarootdir}" ; then
