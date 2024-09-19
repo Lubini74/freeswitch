@@ -1800,7 +1800,7 @@ then
 			PYTHON_CFLAGS="`$PYTHON -c 'from distutils import sysconfig; flags = [[\"-I\" + sysconfig.get_python_inc(0), \"-I\" + sysconfig.get_python_inc(1), \" \".join(sysconfig.get_config_var(\"CFLAGS\").split())]]; print(\" \".join(flags));' | sed -e 's/-arch i386//g;s/-arch x86_64//g'`"
 
 			if test -n "`echo $CFLAGS| grep "\-O0"`" ; then
-				PYTHON_CFLAGS="`echo \"$PYTHON_CFLAGS\" | sed -e 's/-O2/-O0/g;s/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=1/g'`"
+				PYTHON_CFLAGS="`echo \"$PYTHON_CFLAGS\" | sed -e 's/-O2/-O0/g;s/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=0/g'`"
 			fi
 			PYTHON_LDFLAGS="`$PYTHON -c 'from distutils import sysconfig; libs = sysconfig.get_config_var(\"LIBS\").split() + sysconfig.get_config_var(\"SYSLIBS\").split(); libs.append(\"-lpython\"+sysconfig.get_config_var(\"VERSION\")); print(\" \".join(libs));'`"
 			PYTHON_LIB="`$PYTHON -c 'from distutils import sysconfig; print(\"python\" + sysconfig.get_config_var(\"VERSION\"));'`"
@@ -1924,7 +1924,7 @@ then
 			#
 			PYTHON3_CFLAGS="`$PYTHON3 -c 'from distutils import sysconfig; flags = [[\"-I\" + sysconfig.get_python_inc(0), \"-I\" + sysconfig.get_python_inc(1), \" \".join(sysconfig.get_config_var(\"CFLAGS\").split())]]; print(\" \".join(flags));' | sed -e 's/-arch i386//g;s/-arch x86_64//g'`"
 			if test -n "`echo $CFLAGS| grep "\-O0"`" ; then
-				PYTHON3_CFLAGS="`echo \"$PYTHON3_CFLAGS\" | sed -e 's/-O2/-O0/g;s/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=1/g'`"
+				PYTHON3_CFLAGS="`echo \"$PYTHON3_CFLAGS\" | sed -e 's/-O2/-O0/g;s/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=0/g'`"
 			fi
 			PYTHON3_LDFLAGS="`$PYTHON3 -c 'from distutils import sysconfig; ldver = sysconfig.get_config_var(\"LDVERSION\"); libs = sysconfig.get_config_var(\"LIBS\").split() + sysconfig.get_config_var(\"SYSLIBS\").split(); libs.append(\"-lpython\" + [[ldver,sysconfig.get_config_var(\"VERSION\")]][[ldver==None]]); print(\" \".join(libs));'`"
 			PYTHON3_LIB="`$PYTHON3 -c 'from distutils import sysconfig; ldver = sysconfig.get_config_var(\"LDVERSION\"); print(\"python\" + [[ldver,sysconfig.get_config_var(\"VERSION\")]][[ldver==None]]);'`"
