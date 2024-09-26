@@ -224,7 +224,7 @@ other telephony projects including sipXecs, OpenSER, Asterisk, CodeWeaver and Op
 %package devel
 Summary:        Development package for FreeSWITCH open source telephony platform
 Group:          System/Libraries
-Requires:       %{name} = %{version}-%{release}
+#Requires:       %{name} = %{version}-%{release}
 
 %description devel
 FreeSWITCH development files
