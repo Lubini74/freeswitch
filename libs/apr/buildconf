@@ -93,7 +93,7 @@ build/gen-build.py make
 # Create RPM Spec file
 if [ -f `which cut` ]; then
   echo rebuilding rpm spec file
-  ( REVISION=`build/get-version.sh all include/apr_version.h APR`
+  ( REVISION=`build/get-version.sh all include/fspr_version.h APR`
     VERSION=`echo $REVISION | cut -d- -s -f1`
     RELEASE=`echo $REVISION | cut -d- -s -f2`
     if [ "x$VERSION" = "x" ]; then
