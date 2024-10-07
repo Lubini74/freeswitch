@@ -10,7 +10,11 @@
 
 
 import os
-import ConfigParser
+try:
+  import configparser
+except ImportError:
+  import ConfigParser as configparser
+import codecs
 import getopt
 import string
 import glob
@@ -20,7 +24,7 @@ import re
 
 #
 # legal platforms: aix, beos, netware, os2, os390, unix, win32
-# 'make' users: aix, beos, os2, os390, unix
+# 'make' users: aix, beos, os2, os390, unix, win32 (mingw)
 #
 PLATFORMS = [ 'aix', 'beos', 'netware', 'os2', 'os390', 'unix', 'win32' ]
 MAKE_PLATFORMS = [
@@ -29,14 +33,20 @@ MAKE_PLATFORMS = [
   ('beos', 'unix'),
   ('os2', 'unix'),
   ('os390', 'unix'),
+  ('win32', 'unix'),
   ]
 # note: MAKE_PLATFORMS is an ordered set. we want to generate unix symbols
 #       first, so that the later platforms can reference them.
 
 
 def main():
-  parser = ConfigParser.ConfigParser()
+  parser = configparser.ConfigParser()
   parser.read('build.conf')
+
+  if parser.has_option('options', 'dsp'):
+    dsp_file = parser.get('options', 'dsp')
+  else:
+    dsp_file = None
 
   headers = get_files(parser.get('options', 'headers'))
 
@@ -56,7 +66,7 @@ def main():
   # write out the platform-independent files
   files = get_files(parser.get('options', 'paths'))
   objects, dirs = write_objects(f, legal_deps, h_deps, files)
-  f.write('\nOBJECTS_all = %s\n\n' % string.join(objects))
+  f.write('\nOBJECTS_all = %s\n\n' % " ".join(objects))
 
   # for each platform and each subdirectory holding platform-specific files,
   # write out their compilation rules, and an OBJECT_<subdir>_<plat> symbol.
@@ -65,7 +75,26 @@ def main():
     # record the object symbols to build for each platform
     group = [ '$(OBJECTS_all)' ]
 
-    for subdir in string.split(parser.get('options', 'platform_dirs')):
+    # If we're doing win32, we're going to look in the libapr.dsp file
+    # for those files that we have to manually add to our list.
+    inherit_parent = { }
+    if platform == 'win32' and dsp_file:
+      for line in open(dsp_file).readlines():
+        if line[:7] != 'SOURCE=':
+          continue
+        if line[7:].find('unix') != -1:
+          # skip the leading .\ and split it out
+          inherit_files = line[9:].strip().split('\\')
+          # change the .c to .lo
+          assert inherit_files[-1][-2:] == '.c'
+          inherit_files[-1] = inherit_files[-1][:-2] + '.lo'
+          # replace the \\'s with /'s
+          inherit_line = '/'.join(inherit_files)
+          if inherit_files[0] not in inherit_parent:
+            inherit_parent[inherit_files[0]] = []
+          inherit_parent[inherit_files[0]].append(inherit_line)
+
+    for subdir in parser.get('options', 'platform_dirs').split():
       path = '%s/%s' % (subdir, platform)
       if not os.path.exists(path):
         # this subdir doesn't have a subdir for this platform, so we'll
@@ -81,19 +110,43 @@ def main():
       files = get_files(path + '/*.c')
       objects, _unused = write_objects(f, legal_deps, h_deps, files)
 
+      if subdir in inherit_parent:
+        objects = objects + inherit_parent[subdir]
+
       symname = 'OBJECTS_%s_%s' % (subdir, platform)
 
+      objects.sort()
+
       # and write the symbol for the whole group
-      f.write('\n%s = %s\n\n' % (symname, string.join(objects)))
+      f.write('\n%s = %s\n\n' % (symname, " ".join(objects)))
 
       # and include that symbol in the group
       group.append('$(%s)' % symname)
 
-    # write out a symbol which contains the necessary files
-    f.write('OBJECTS_%s = %s\n\n' % (platform, string.join(group)))
+    group.sort()
 
-  f.write('HEADERS = $(top_srcdir)/%s\n\n' % string.join(headers, ' $(top_srcdir)/'))
-  f.write('SOURCE_DIRS = %s $(EXTRA_SOURCE_DIRS)\n\n' % string.join(dirs.keys()))
+    # write out a symbol which contains the necessary files
+    f.write('OBJECTS_%s = %s\n\n' % (platform, " ".join(group)))
+
+  f.write('HEADERS = $(top_srcdir)/%s\n\n' % ' $(top_srcdir)/'.join(headers))
+  f.write('SOURCE_DIRS = %s $(EXTRA_SOURCE_DIRS)\n\n' % " ".join(dirs.keys()))
+
+  if parser.has_option('options', 'modules'):
+    modules = parser.get('options', 'modules')
+
+    for mod in modules.split():
+      files = get_files(parser.get(mod, 'paths'))
+      objects, _unused = write_objects(f, legal_deps, h_deps, files)
+      flat_objects = " ".join(objects)
+      f.write('OBJECTS_%s = %s\n' % (mod, flat_objects))
+
+      if parser.has_option(mod, 'target'):
+        target = parser.get(mod, 'target')
+        f.write('MODULE_%s = %s\n' % (mod, target))
+        f.write('%s: %s\n' % (target, flat_objects))
+        f.write('\t$(LINK_MODULE) -o $@ $(OBJECTS_%s) $(LDADD_%s)\n' % (mod, mod))
+
+      f.write('\n')
 
   # Build a list of all necessary directories in build tree
   alldirs = { }
@@ -104,9 +157,9 @@ def main():
       d = os.path.dirname(d)
 
   # Sort so 'foo' is before 'foo/bar'
-  keys = alldirs.keys()
+  keys = list(alldirs.keys())
   keys.sort()
-  f.write('BUILD_DIRS = %s\n\n' % string.join(keys))
+  f.write('BUILD_DIRS = %s\n\n' % " ".join(keys))
 
   f.write('.make.dirs: $(srcdir)/build-outputs.mk\n' \
           '\t@for d in $(BUILD_DIRS); do test -d $$d || mkdir $$d; done\n' \
@@ -118,6 +171,8 @@ def write_objects(f, legal_deps, h_deps, files):
   objects = [ ]
 
   for file in files:
+    if file[-10:] == '/apr_app.c':
+      continue
     assert file[-2:] == '.c'
     obj = file[:-2] + '.lo'
     objects.append(obj)
@@ -126,10 +181,14 @@ def write_objects(f, legal_deps, h_deps, files):
 
     # what headers does this file include, along with the implied headers
     deps = extract_deps(file, legal_deps)
-    for hdr in deps.keys():
+    for hdr in list(deps.keys()):
       deps.update(h_deps.get(hdr, {}))
 
-    f.write('%s: %s .make.dirs %s\n' % (obj, file, string.join(deps.values())))
+    vals = list(deps.values())
+    vals.sort()
+    f.write('%s: %s .make.dirs %s\n' % (obj, file, " ".join(vals)))
+
+  objects.sort()
 
   return objects, dirs
 
@@ -137,7 +196,7 @@ def write_objects(f, legal_deps, h_deps, files):
 def extract_deps(fname, legal_deps):
   "Extract the headers this file includes."
   deps = { }
-  for line in open(fname).readlines():
+  for line in codecs.open(fname, 'r', 'utf-8').readlines():
     if line[:8] != '#include':
       continue
     inc = _re_include.match(line).group(1)
@@ -155,16 +214,19 @@ def resolve_deps(header_deps):
     for hdr, deps in header_deps.items():
       # print hdr, deps
       start = len(deps)
-      for dep in deps.keys():
+      for dep in list(deps.keys()):
         deps.update(header_deps.get(dep, {}))
       if len(deps) != start:
         altered = 1
 
+def clean_path(path):
+    return path.replace("\\", "/")
 
 def get_files(patterns):
   files = [ ]
-  for pat in string.split(patterns):
-    files.extend(glob.glob(pat))
+  for pat in patterns.split():
+    files.extend(map(clean_path, glob.glob(pat)))
+  files.sort()
   return files
 
 
