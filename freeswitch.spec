@@ -137,8 +137,8 @@ BuildRequires: curl-devel >= 7.19
 BuildRequires: gcc-c++
 BuildRequires: libtool >= 1.5.17
 BuildRequires: openssl-devel >= 1.0.1e
-BuildRequires: sofia-sip-devel >= 1.13.12
-BuildRequires: spandsp-devel >= 3.0
+BuildRequires: sofia-sip-devel >= 1.13.17
+BuildRequires: spandsp3-devel >= 3.0
 BuildRequires: pcre-devel 
 BuildRequires: speex-devel 
 BuildRequires: sqlite-devel >= 3.6.20
@@ -796,16 +796,6 @@ Requires:        %{name} = %{version}-%{release}
 %description event-format-cdr
 JSON and XML Logger for the FreeSWITCH open source telephony platform
 
-%package kazoo
-Summary:	Kazoo Module for the FreeSWITCH open source telephony platform
-Group:		System/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	erlang
-BuildRequires:	erlang
-
-%description kazoo
-Kazoo Module for FreeSWITCH.
-
 %package event-multicast
 Summary:	Multicast Event System for the FreeSWITCH open source telephony platform
 Group:		System/Libraries
@@ -1236,9 +1226,9 @@ ENDPOINTS_MODULES=" \
 #
 ######################################################################################################################
 EVENT_HANDLERS_MODULES="event_handlers/mod_cdr_csv event_handlers/mod_cdr_pg_csv event_handlers/mod_cdr_sqlite \
-			event_handlers/mod_format_cdr event_handlers/mod_erlang_event event_handlers/mod_event_multicast \
-			event_handlers/mod_event_socket event_handlers/mod_json_cdr event_handlers/mod_kazoo \
-			"
+			event_handlers/mod_cdr_mongodb event_handlers/mod_format_cdr event_handlers/mod_erlang_event event_handlers/mod_event_multicast \
+			event_handlers/mod_event_socket event_handlers/mod_json_cdr event_handlers/mod_radius_cdr \
+			event_handlers/mod_snmp"
 %if %{build_mod_rayo}
 EVENT_HANDLERS_MODULES+=" event_handlers/mod_rayo"
 %endif
@@ -1660,24 +1650,29 @@ fi
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/http_cache.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/ivr.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/java.conf.xml
-%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/kazoo.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/lcr.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/local_stream.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/logfile.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/memcache.conf.xml
+%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/modules.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/mongo.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/msrp.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/nibblebill.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/opal.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/oreka.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/osp.conf.xml
+%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/pocketsphinx.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/portaudio.conf.xml
+%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/post_load_modules.conf.xml
+%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/pre_load_modules.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/presence_map.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/redis.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/rss.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/rtmp.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/sangoma_codec.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/shout.conf.xml
+%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/signalwire.conf.xml
+%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/skinny.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/smpp.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/sms_flowroute.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/sndfile.conf.xml
@@ -1689,6 +1684,7 @@ fi
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/translate.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/tts_commandline.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/unicall.conf.xml
+%config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/verto.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/voicemail.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/voicemail_ivr.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/vpx.conf.xml
@@ -1697,7 +1693,6 @@ fi
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/xml_rpc.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/xml_scgi.conf.xml
 %config(noreplace) %attr(0640, freeswitch, freeswitch) %{sysconfdir}/autoload_configs/zeroconf.conf.xml
-
 ######################################################################################################################
 #						Chatplans
 ######################################################################################################################
@@ -1958,8 +1953,8 @@ fi
 %files event-json-cdr
 %{MODINSTDIR}/mod_json_cdr.so*
 
-%files kazoo
-%{MODINSTDIR}/mod_kazoo.so*
+%files event-radius-cdr
+%{MODINSTDIR}/mod_radius_cdr.so*
 
 %if %{build_mod_rayo}
 %files event-rayo 
