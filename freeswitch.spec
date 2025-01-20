@@ -224,7 +224,7 @@ other telephony projects including sipXecs, OpenSER, Asterisk, CodeWeaver and Op
 %package devel
 Summary:        Development package for FreeSWITCH open source telephony platform
 Group:          System/Libraries
-#Requires:       %{name} = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
 
 %description devel
 FreeSWITCH development files
@@ -811,6 +811,14 @@ Requires:	%{name} = %{version}-%{release}
 
 %description event-json-cdr
 JSON CDR Logger for FreeSWITCH.
+
+%package event-radius-cdr
+Summary:        RADIUS Logger for the FreeSWITCH open source telephony platform
+Group:          System/Libraries
+Requires:        %{name} = %{version}-%{release}
+
+%description event-radius-cdr
+RADIUS Logger for the FreeSWITCH open source telephony platform
 
 %if %{build_mod_rayo}
 %package event-rayo
