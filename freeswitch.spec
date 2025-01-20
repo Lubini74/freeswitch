@@ -48,7 +48,7 @@
 %{?with_mod_esl:%define build_mod_esl 1 }
 %{?with_mod_v8:%define build_mod_v8 0 }
 
-%define nonparsedversion 1.10.10
+%define nonparsedversion 1.10.12
 %define version %(echo '%{nonparsedversion}' | sed 's/-//g')
 %define release 19
 
@@ -138,7 +138,7 @@ BuildRequires: gcc-c++
 BuildRequires: libtool >= 1.5.17
 BuildRequires: openssl-devel >= 1.0.1e
 BuildRequires: sofia-sip-devel >= 1.13.17
-BuildRequires: spandsp3-devel >= 3.0
+BuildRequires: spandsp-devel >= 3.0
 BuildRequires: pcre-devel 
 BuildRequires: speex-devel 
 BuildRequires: sqlite-devel >= 3.6.20
