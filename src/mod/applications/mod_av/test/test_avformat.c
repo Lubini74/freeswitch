@@ -171,7 +171,7 @@ FST_CORE_BEGIN("conf")
 			switch_frame_t frame = { 0 };
 			switch_size_t len = SAMPLES;
 			uint32_t flags = SWITCH_FILE_FLAG_READ | SWITCH_FILE_DATA_SHORT | SWITCH_FILE_FLAG_VIDEO;
-			int i = 0;
+			//int i = 0;
 
 			sprintf(path, "{no_video_decode=true}%s%s%s", SWITCH_GLOBAL_dirs.conf_dir, SWITCH_PATH_SEPARATOR, "../test_RGB.mp4");
 			// switch_set_string(path, "{no_video_decode=true}/usr/local/freeswitch/storage/bingbing.mp4");
