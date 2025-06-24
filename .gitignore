@@ -286,3 +286,6 @@ tests/unit/switch_core_asr
 tests/unit/switch_sip
 .qtc_clangd/
 QtCreatorFS.*
+.editorconfig
+.vscode/
+freeswitch.code-workspace
