@@ -138,7 +138,7 @@ BuildRequires: gcc-c++
 BuildRequires: libtool >= 1.5.17
 BuildRequires: openssl-devel >= 1.0.1e
 BuildRequires: sofia-sip-devel >= 1.13.17
-BuildRequires: spandsp3-devel >= 3.0
+BuildRequires: spandsp-devel >= 3.0
 BuildRequires: pcre-devel 
 BuildRequires: speex-devel 
 BuildRequires: sqlite-devel >= 3.6.20
@@ -811,6 +811,14 @@ Requires:	%{name} = %{version}-%{release}
 
 %description event-json-cdr
 JSON CDR Logger for FreeSWITCH.
+
+%package event-radius-cdr
+Summary:        RADIUS Logger for the FreeSWITCH open source telephony platform
+Group:          System/Libraries
+Requires:        %{name} = %{version}-%{release}
+
+%description event-radius-cdr
+RADIUS Logger for the FreeSWITCH open source telephony platform
 
 %if %{build_mod_rayo}
 %package event-rayo
