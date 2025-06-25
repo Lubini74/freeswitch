@@ -10783,7 +10783,7 @@ SWITCH_DECLARE(void) switch_core_media_gen_local_sdp(switch_core_session_t *sess
 
 
 #ifdef GOOGLE_ICE
-            switch_snprintf(buf + strlen(buf), SDPBUFL,EN - strlen(buf), "a=ice-options:google-ice\r\n");
+			switch_snprintf(buf + strlen(buf), SDPBUFLEN - strlen(buf), "a=ice-options:google-ice\r\n");
 #endif
 		}
 
