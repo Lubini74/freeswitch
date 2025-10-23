@@ -948,8 +948,14 @@ BuildRequires:  lua-devel
 Summary:        Python support for the FreeSWITCH open source telephony platform
 Group:          System/Libraries
 Requires:       %{name} = %{version}-%{release}
+%if 0%{?rhel} == 8
 Requires:       python39
 BuildRequires:  python39-devel
+%endif
+%if 0%{?rhel} == 9
+Requires:       python3
+BuildRequires:  python3-devel
+%endif
 
 %description    python
 
@@ -1041,8 +1047,14 @@ Provides XML-RPC interface for the FreeSWITCH Open Source telephone platform.
 %package	-n python-ESL
 Summary:	The Python ESL module allows for native interaction with FreeSWITCH over the event socket interface.
 Group:		System Environment/Libraries
+%if 0%{?rhel} == 8
 Requires:	python39
 BuildRequires:	python39-devel
+%endif
+%if 0%{?rhel} == 9
+Requires:	python3
+BuildRequires:	python3-devel
+%endif
 
 %description	-n python-ESL
 The Python ESL module allows for native interaction with FreeSWITCH over the event socket interface.
@@ -1396,7 +1408,12 @@ cd libs/esl
 
 #install esl for python 39
 %{__make} clean
+%if 0%{?rhel} == 8
 sed -i s/python\ /python39\ /g python3/Makefile
+%endif
+%if 0%{?rhel} == 9
+sed -i s/python\ /python3\ /g python3/Makefile
+%endif
 %{__make} py3mod
 %{__mkdir} -p %{buildroot}/usr/lib/python3.9/site-packages
 %{__make} DESTDIR=%{buildroot} py3mod-install
