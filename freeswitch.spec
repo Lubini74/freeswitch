@@ -1494,7 +1494,7 @@ chown freeswitch:freeswitch /var/log/freeswitch /var/run/freeswitch
 %if "%{?_unitdir}" == ""
 chkconfig --add freeswitch
 %else
-%tmpfiles_create freeswitch
+%tmpfiles_create freeswitch.conf
 /usr/bin/systemctl -q enable freeswitch.service
 %endif
 
