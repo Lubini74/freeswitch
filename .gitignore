@@ -56,6 +56,7 @@ TAGS
 *.cache
 *.lastbuildstate
 *.sdf
+*.backup
 
 /w32/Library/lastversion
 /w32/Library/tmpVersion.Bat
@@ -272,6 +273,7 @@ src/mod/*/*/test/*.log
 src/mod/*/*/test/*.trs
 src/mod/*/*/test/[0-9]*/*
 test-suite.log
+src/mod/formats/mod_opusfile/test/test_opusfile
 src/mod/applications/mod_av/test/test_BT7.mp4
 src/mod/applications/mod_av/test/test_RGB.mp4
 images/test-argb.png
