@@ -1918,7 +1918,7 @@ then
 			#
 			# python3 distutils found, get settings from python3 directly
 			#
-			PYTHON3_CFLAGS="`$PYTHON3 -c 'from distutils import sysconfig; flags = [[\"-I\" + sysconfig.get_python_inc(0), \"-I\" + sysconfig.get_python_inc(1), \" \".join(sysconfig.get_config_var(\"CFLAGS\").split())]]; print(\" \".join(flags));' | sed -e 's/-arch i386//g;s/-arch x86_64//g'`"
+			PYTHON3_CFLAGS="`$PYTHON3 -c 'from distutils import sysconfig; flags = [[\"-I\" + sysconfig.get_python_inc(0), \"-I\" + sysconfig.get_python_inc(1), \" \".join(sysconfig.get_config_var(\"CFLAGS\").split())]]; print(\" \".join(flags));' | sed -e 's/-arch i386//g;s/-arch x86_64//g;s/ -DNDEBUG -O2 -g//g;s/ -Wp,-D_FORTIFY_SOURCE=2//g'`"
 			PYTHON3_LDFLAGS="`$PYTHON3 -c 'from distutils import sysconfig; ldver = sysconfig.get_config_var(\"LDVERSION\"); libs = sysconfig.get_config_var(\"LIBS\").split() + sysconfig.get_config_var(\"SYSLIBS\").split(); libs.append(\"-lpython\" + [[ldver,sysconfig.get_config_var(\"VERSION\")]][[ldver==None]]); print(\" \".join(libs));'`"
 			PYTHON3_LIB="`$PYTHON3 -c 'from distutils import sysconfig; ldver = sysconfig.get_config_var(\"LDVERSION\"); print(\"python\" + [[ldver,sysconfig.get_config_var(\"VERSION\")]][[ldver==None]]);'`"
 			PYTHON3_LIBDIR="`$PYTHON3 -c 'from distutils import sysconfig; print(sysconfig.get_config_var(\"LIBDIR\"));'`"
