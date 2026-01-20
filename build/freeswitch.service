@@ -11,6 +11,7 @@ Environment="REQUESTS_CA_BUNDLE=/etc/pki/tls/certs/ca-bundle.crt"
 Environment="DAEMON_OPTS=-nonat"
 Environment="USER=freeswitch"
 Environment="GROUP=freeswitch"
+Environment="LD_LIBRARY_PATH=/opt/unimrcp/lib64:/opt/unimrcp/lib:/usr/lib64:/usr/lib"
 EnvironmentFile=-/etc/default/freeswitch
 ExecStart=/usr/bin/freeswitch -nc -nf -rp -u freeswitch -g freeswitch $FREESWITCH_PARAMS
 TimeoutSec=45s
