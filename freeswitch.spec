@@ -119,7 +119,7 @@ Vendor:       	http://www.freeswitch.org/
 #
 ######################################################################################################################
 Source0:        http://files.freeswitch.org/%{name}-%{nonparsedversion}.tar.gz
-Prefix:        	%{prefix}
+Prefix:        	%{_prefix}
 
 
 ######################################################################################################################
@@ -152,6 +152,7 @@ BuildRequires: which
 BuildRequires: zlib-devel
 BuildRequires: libxml2-devel
 BuildRequires: libsndfile-devel
+BuildRequires: patchelf
 Requires: curl >= 7.19
 Requires: pcre
 Requires: speex
@@ -1395,6 +1396,9 @@ cd libs/esl
 
 
 %{__make} DESTDIR=%{buildroot} install
+# Fix problem with multiple APR libraries, to use our compilation in /opt/unimrcp/lib64
+patchelf --set-rpath /opt/unimrcp/lib64 %{buildroot}/usr/bin/freeswitch
+
 
 # Create a log dir
 %{__mkdir} -p %{buildroot}%{prefix}/log
