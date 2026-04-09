@@ -2,7 +2,7 @@
 Description=freeswitch
 Wants=network-online.target
 Requires=network.target local-fs.target
-After=syslog.target network.target
+After=syslog.target network.target sssd.target
 
 [Service]
 RuntimeDirectory=freeswitch
