@@ -50,7 +50,7 @@
 
 %define nonparsedversion 1.10.12
 %define version %(echo '%{nonparsedversion}' | sed 's/-//g')
-%define release 10
+%define release 11
 
 ######################################################################################################################
 #
