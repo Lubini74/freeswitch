@@ -949,8 +949,8 @@ Summary:        Python support for the FreeSWITCH open source telephony platform
 Group:          System/Libraries
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?rhel} == 8
-Requires:       python39
-BuildRequires:  python39-devel
+Requires:       python3.11
+BuildRequires:  python3.11-devel
 %endif
 %if 0%{?rhel} == 9
 Requires:       python3
@@ -1048,8 +1048,8 @@ Provides XML-RPC interface for the FreeSWITCH Open Source telephone platform.
 Summary:	The Python ESL module allows for native interaction with FreeSWITCH over the event socket interface.
 Group:		System Environment/Libraries
 %if 0%{?rhel} == 8
-Requires:	python39
-BuildRequires:	python39-devel
+Requires:	python3.11
+BuildRequires:	python3.11-devel
 %endif
 %if 0%{?rhel} == 9
 Requires:	python3
