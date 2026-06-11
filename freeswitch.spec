@@ -1416,7 +1416,7 @@ sed -i s/python\ /python39\ /g python3/Makefile
 sed -i s/python\ /python3\ /g python3/Makefile
 %endif
 %{__make} py3mod
-%{__mkdir} -p %{buildroot}/usr/lib/python3.9/site-packages
+%{__mkdir} -p %{buildroot}/usr/lib/python3.11/site-packages
 %{__make} DESTDIR=%{buildroot} py3mod-install
 
 cd ../..
@@ -1466,8 +1466,8 @@ cd ../..
 %{__rm} -f %{buildroot}/%{LIBDIR}/*.la
 %{__rm} -f %{buildroot}/%{MODINSTDIR}/*.la
 
-%{__rm} -rf %{buildroot}/usr/lib/python3.9/site-packages/__pycache__
-%{__rm} -rf %{buildroot}/usr/lib64/python3.9/site-packages/__pycache__
+%{__rm} -rf %{buildroot}/usr/lib/python3.11/site-packages/__pycache__
+%{__rm} -rf %{buildroot}/usr/lib64/python3.11/site-packages/__pycache__
 
 
 ######################################################################################################################
@@ -2020,7 +2020,7 @@ fi
 
 %files python
 %{MODINSTDIR}/mod_python*.so*
-%attr(0644, root, bin) /usr/lib/python3.9/site-packages/freeswitch.py*
+%attr(0644, root, bin) /usr/lib/python3.11/site-packages/freeswitch.py*
 
 %if %{build_mod_v8}
 %files v8
@@ -2099,8 +2099,8 @@ fi
 
 
 %files	-n python-ESL
-%attr(0755, root, bin) /usr/lib64/python3.9/site-packages/_ESL.so*
-%attr(0755, root, bin) /usr/lib64/python3.9/site-packages/ESL.py*
+%attr(0755, root, bin) /usr/lib64/python3.11/site-packages/_ESL.so*
+%attr(0755, root, bin) /usr/lib64/python3.11/site-packages/ESL.py*
 
 %exclude 
 %{sysconfdir}/autoload_configs/perl.conf.xml
